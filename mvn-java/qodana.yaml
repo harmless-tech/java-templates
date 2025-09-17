@@ -1,0 +1,7 @@
+version: "1.0"
+
+projectJDK: temurin-24
+profile:
+  name: qodana.recommended
+
+raiseLicenseProblems: true
