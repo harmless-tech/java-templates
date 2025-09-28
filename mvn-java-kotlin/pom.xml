@@ -23,7 +23,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.build.targetEncoding>UTF-8</project.build.targetEncoding>
-    <maven.compiler.release>24</maven.compiler.release>
+    <maven.compiler.release>25</maven.compiler.release>
     <project.build.outputTimestamp>2023-01-01T00:00:00Z</project.build.outputTimestamp>
 
     <project.mainClass>tech.harmless.TODO.App</project.mainClass>
@@ -148,7 +148,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.14.0</version>
+        <version>3.14.1</version>
         <configuration>
           <release>${maven.compiler.release}</release>
           <showWarnings>true</showWarnings>
@@ -257,7 +257,7 @@
       <plugin>
         <groupId>org.jetbrains.dokka</groupId>
         <artifactId>dokka-maven-plugin</artifactId>
-        <version>2.0.0</version>
+        <version>2.1.0-Beta</version>
         <configuration>
           <sourceDirectories>
             <dir>${project.basedir}/src/main</dir>
@@ -322,14 +322,14 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>versions-maven-plugin</artifactId>
-        <version>2.19.0</version>
+        <version>2.19.1</version>
       </plugin>
 
       <!-- https://mvnrepository.com/artifact/org.codehaus.mojo/license-maven-plugin -->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>license-maven-plugin</artifactId>
-        <version>2.6.0</version>
+        <version>2.7.0</version>
       </plugin>
 
       <!-- https://mvnrepository.com/artifact/org.codehaus.mojo/exec-maven-plugin -->
@@ -354,7 +354,7 @@
       <plugin>
         <groupId>com.diffplug.spotless</groupId>
         <artifactId>spotless-maven-plugin</artifactId>
-        <version>2.46.1</version>
+        <version>3.0.0</version>
         <configuration>
           <java>
             <includes>
@@ -365,10 +365,11 @@
               <file>${project.basedir}/other/license-header</file>
             </licenseHeader>
             <removeUnusedImports/>
+            <forbidWildcardImports/>
             <importOrder/>
             <!-- https://mvnrepository.com/artifact/com.palantir.javaformat/palantir-java-format -->
             <palantirJavaFormat>
-              <version>2.73.0</version>
+              <version>2.74.0</version>
               <style>PALANTIR</style>
               <formatJavadoc>true</formatJavadoc>
             </palantirJavaFormat>
@@ -381,10 +382,10 @@
             </includes>
             <ktfmt>
               <!-- https://github.com/facebook/ktfmt/releases -->
-              <version>0.56</version>
+              <version>0.58</version>
               <style>KOTLINLANG</style>
               <removeUnusedImports>true</removeUnusedImports>
-              <manageTrailingCommas>true</manageTrailingCommas>
+              <trailingCommaManagementStrategy>COMPLETE</trailingCommaManagementStrategy>
             </ktfmt>
             <licenseHeader>
               <file>${project.basedir}/other/license-header</file>
@@ -423,31 +424,6 @@
           </execution>
         </executions>
       </plugin>
-
-      <!-- https://mvnrepository.com/artifact/com.github.spotbugs/spotbugs-maven-plugin -->
-      <plugin>
-        <groupId>com.github.spotbugs</groupId>
-        <artifactId>spotbugs-maven-plugin</artifactId>
-        <version>4.9.6.0</version>
-        <configuration>
-          <plugins>
-            <!-- https://mvnrepository.com/artifact/com.h3xstream.findsecbugs/findsecbugs-plugin -->
-            <plugin>
-              <groupId>com.h3xstream.findsecbugs</groupId>
-              <artifactId>findsecbugs-plugin</artifactId>
-              <version>1.14.0</version>
-            </plugin>
-          </plugins>
-        </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>check</goal>
-            </goals>
-            <phase>verify</phase>
-          </execution>
-        </executions>
-      </plugin>
     </plugins>
   </build>
 
@@ -460,7 +436,7 @@
           <plugin>
             <groupId>org.graalvm.buildtools</groupId>
             <artifactId>native-maven-plugin</artifactId>
-            <version>0.11.0</version>
+            <version>0.11.1</version>
             <extensions>true</extensions>
             <configuration>
               <mainClass>${project.mainClass}</mainClass>

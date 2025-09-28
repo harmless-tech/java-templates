@@ -9,14 +9,9 @@ mvn +ARGS:
 version-check:
     {{ CMD }} versions:display-dependency-updates versions:display-plugin-updates versions:display-property-updates
 
-dl-licenses:
-    {{ CMD }} license:aggregate-download-licenses license:aggregate-third-party-report
-
-verify:
-    {{ CMD }} verify
-
-test:
-    {{ CMD }} test
+javadoc:
+    {{ CMD }} compile javadoc:javadoc
+    open ./target/dokka/html/index.html
 
 qcheck:
     docker run --rm -it -p 8080:8080 \
@@ -24,13 +19,16 @@ qcheck:
         -v ./tmp/qres:/data/results/ \
         jetbrains/qodana-jvm-community:latest --show-report
 
-javadoc:
-    {{ CMD }} compile javadoc:javadoc
-    open ./target/reports/apidocs/index.html
-
 fmt: apply
 apply:
     {{ CMD }} spotless:apply
+
+check: verify
+verify:
+    {{ CMD }} verify
+
+test:
+    {{ CMD }} test
 
 run: exec
 exec:
@@ -39,9 +37,11 @@ exec:
 compile:
     {{ CMD }} compile
 
+jar: package
 package:
     {{ CMD }} package
 
+native-exe: native-package
 native-package:
     {{ CMD }} -Pnative package
 
