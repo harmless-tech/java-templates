@@ -1,0 +1,101 @@
+name: Build and Check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+  qodana:
+    permissions:
+      contents: write
+      pull-requests: write
+      checks: write
+      security-events: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Qodana Scan
+        uses: JetBrains/qodana-action@v2025.2
+        with:
+          args: --linter,jetbrains/qodana-jvm-community:2025.2
+          upload-result: true
+      - uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: ${{ runner.temp }}/qodana/results/qodana.sarif.json
+
+  build:
+    permissions:
+      contents: write
+    strategy:
+      matrix:
+        jdk: [ 25 ]
+        os: [ ubuntu-latest, macos-latest, windows-latest ]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - name: Set up JDK ${{ matrix.jdk }}
+        uses: actions/setup-java@v5
+        with:
+          java-version: '${{ matrix.jdk }}'
+          distribution: 'temurin'
+          check-latest: true
+          cache: gradle
+      - name: Build with Gradle
+        run: ./gradlew -V -i clean check test jar javadocJar sourcesJar
+      - uses: actions/upload-artifact@v4
+        if: ${{ contains(matrix.os, 'ubuntu') }}
+        with:
+          name: project-dev-jdk${{ matrix.jdk }}
+          path: |
+            ./LICENSE
+            ./README.md
+            ./app/build/libs/*.jar
+            ./app/build/libs/libs
+      - name: Update dependency graph
+        uses: gradle/actions/dependency-submission@v4
+
+  native-build:
+    permissions:
+      contents: write
+    strategy:
+      matrix:
+        jdk: [ 25 ]
+        os: [ ubuntu-latest, ubuntu-24.04-arm, macos-latest, windows-latest ]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - name: Set up JDK ${{ matrix.jdk }}
+        uses: actions/setup-java@v5
+        with:
+          java-version: '${{ matrix.jdk }}'
+          distribution: 'graalvm'
+          check-latest: true
+          cache: gradle
+      - name: Build with Gradle
+        run: ./gradlew -V -i clean nativeCompile
+      - uses: actions/upload-artifact@v4
+        with:
+          name: project-dev-native${{ matrix.jdk }}-${{ matrix.os }}
+          path: |
+            ./LICENSE
+            ./README.md
+            ./app/build/native/nativeCompile/*
+            ./app/build/libs/*.jar
+            ./app/build/libs/libs
