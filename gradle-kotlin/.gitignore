@@ -1,0 +1,21 @@
+# Ignore Gradle project-specific cache directory
+.gradle
+.kotlin
+
+# Ignore Gradle build output directory
+build
+
+# Eclipse m2e generated files
+# Eclipse Core
+.project
+# JDT-specific (Eclipse Java Development Tools)
+.classpath
+
+# Editors
+.idea/
+.vscode/
+
+temp/
+tmp/
+*.tmp
+*.temp

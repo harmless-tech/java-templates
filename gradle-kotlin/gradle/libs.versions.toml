@@ -1,6 +1,7 @@
 [versions]
 jspecify = "1.0.0"
 tinylog = "2.7.0"
+kotlin = "2.2.20"
 versions = "0.53.0"
 dokka = "2.1.0-Beta"
 spotless = "8.0.0"
@@ -11,11 +12,14 @@ junit-jupiter = "6.0.0"
 jspecify = { module = "org.jspecify:jspecify", version.ref = "jspecify" }
 tinylog-api = { module = "org.tinylog:tinylog-api", version.ref = "tinylog" }
 tinylog-impl = { module = "org.tinylog:tinylog-impl", version.ref = "tinylog" }
-junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit-jupiter" }
+kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
+kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
+kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit-jupiter" }
 junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher", version.ref = "junit-jupiter" }
 
 [plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 versions = { id = "com.github.ben-manes.versions", version.ref = "versions" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }

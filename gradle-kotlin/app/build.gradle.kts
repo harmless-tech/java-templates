@@ -1,8 +1,9 @@
 import com.diffplug.spotless.kotlin.KtfmtStep
 
 plugins {
-    java
     application
+
+    alias(libs.plugins.kotlin.jvm)
 
     alias(libs.plugins.versions)
     alias(libs.plugins.dokka)
@@ -21,7 +22,10 @@ dependencies {
     implementation(libs.tinylog.api)
     implementation(libs.tinylog.impl)
 
-    testImplementation(libs.junit.jupiter.api)
+    implementation(libs.kotlin.stdlib)
+    implementation(libs.kotlin.reflect)
+
+    testImplementation(libs.kotlin.test)
     testImplementation(libs.junit.jupiter.engine)
     testRuntimeOnly(libs.junit.platform.launcher)
 }
@@ -29,7 +33,7 @@ dependencies {
 java {
     withSourcesJar()
     // withJavadocJar()
-    toolchain { languageVersion = JavaLanguageVersion.of(25) }
+    toolchain { languageVersion = JavaLanguageVersion.of(24) }
 }
 
 tasks.compileJava {
@@ -40,7 +44,7 @@ tasks.compileJava {
 
 tasks.jar { dependsOn("copyDepJars") }
 
-application { mainClass = "tech.harmless.TODO.App" }
+application { mainClass = "tech.harmless.TODO.KAppKt" }
 
 tasks.register<Copy>("copyFiles") {
     mustRunAfter(tasks.processResources)
@@ -63,14 +67,6 @@ tasks.register<Jar>("javadocJar") {
 tasks.named<Test>("test") { useJUnitPlatform() }
 
 spotless {
-    java {
-        licenseHeaderFile("$rootDir/other/license-header")
-        removeUnusedImports()
-        forbidWildcardImports()
-        importOrder()
-        palantirJavaFormat("2.74.0").style("PALANTIR").formatJavadoc(true)
-        formatAnnotations()
-    }
     kotlin {
         licenseHeaderFile("$rootDir/other/license-header")
         ktfmt("0.58").kotlinlangStyle().configure {

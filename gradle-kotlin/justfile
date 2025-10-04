@@ -1,0 +1,61 @@
+CMD := "./gradlew"
+
+default:
+    just -l
+
+gradlew +ARGS:
+    {{ CMD }} {{ ARGS }}
+
+version-check:
+    {{ CMD }} dependencyUpdates
+
+javadoc:
+    {{ CMD }} dokkaGenerateHtml
+    open ./app/build/dokka/html/index.html
+
+qcheck:
+    docker run --rm -it -p 8080:8080 \
+        -v ./:/data/project/ \
+        -v ./tmp/qres:/data/results/ \
+        jetbrains/qodana-jvm-community:latest --show-report
+
+fmt: apply
+apply:
+    {{ CMD }} spotlessApply
+
+verify: check
+check:
+    {{ CMD }} check
+
+test:
+    {{ CMD }} test
+
+run: exec
+exec:
+    {{ CMD }} compileJava run
+
+compile:
+    {{ CMD }} compileJava
+
+package: jar
+jar:
+    {{ CMD }} jar
+
+jars:
+    {{ CMD }} jar javadocJar sourcesJar
+
+native-package: native-exe
+native-exe:
+    {{ CMD }} nativeCompile
+
+native-run:
+    {{ CMD }} nativeRun
+
+prod:
+    {{ CMD }} -V -i clean check test jar javadocJar sourcesJar
+
+install:
+    {{ CMD }} publishToMavenLocal
+
+clean:
+    {{ CMD }} clean

@@ -1,8 +1,9 @@
 import com.diffplug.spotless.kotlin.KtfmtStep
 
 plugins {
-    java
     application
+
+    alias(libs.plugins.kotlin.jvm)
 
     alias(libs.plugins.versions)
     alias(libs.plugins.dokka)
@@ -21,6 +22,10 @@ dependencies {
     implementation(libs.tinylog.api)
     implementation(libs.tinylog.impl)
 
+    implementation(libs.kotlin.stdlib)
+    implementation(libs.kotlin.reflect)
+
+    testImplementation(libs.kotlin.test)
     testImplementation(libs.junit.jupiter.api)
     testImplementation(libs.junit.jupiter.engine)
     testRuntimeOnly(libs.junit.platform.launcher)
@@ -29,7 +34,7 @@ dependencies {
 java {
     withSourcesJar()
     // withJavadocJar()
-    toolchain { languageVersion = JavaLanguageVersion.of(25) }
+    toolchain { languageVersion = JavaLanguageVersion.of(24) }
 }
 
 tasks.compileJava {
